@@ -68,7 +68,7 @@ Every incoming lead is automatically:
 
 ## Workflow Architecture
 
-![Workflow Architecture](screenshots/architecture.png)
+![Workflow Architecture](screenshots/Architecture.png)
 
 ---
 
@@ -121,15 +121,15 @@ The workflow was tested end-to-end using multiple real-world scenarios.
 
 ### Google Sheets CRM
 
-![Google Sheets](screenshots/google-sheet.png)
+![Google Sheets](screenshots/Google-sheet.png)
 
 ### Gmail Response
 
-![Gmail Response](screenshots/gmail-hot-lead.png)
+![Gmail Response](screenshots/Gmail-hot-lead.png)
 
 ### Telegram Response
 
-![Telegram Response](screenshots/telegram-response.png)
+![Telegram Response](screenshots/Telegram-response.png)
 
 ---
 
