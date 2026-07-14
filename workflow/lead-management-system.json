@@ -1,0 +1,1169 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.LeadScore }}",
+                    "rightValue": "Hot",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "82dc65e3-03c8-4566-bbea-55a181bea6ea"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f7c4837a-0dd2-4daa-b576-f4380c14ad5a",
+                    "leftValue": "={{ $json.LeadScore }}",
+                    "rightValue": "Warm",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "60293026-35d4-486f-9a29-1850b7afc5a9",
+                    "leftValue": "={{ $json.LeadScore }}",
+                    "rightValue": "Cold",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1776,
+        -16
+      ],
+      "id": "70da818f-2bd1-4a18-b0d7-704a1bb7df00",
+      "name": "Route by Channel"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "96050c23-33d7-42d2-b67b-0e030f4736eb",
+              "leftValue": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.DeliveryChannel }}",
+              "rightValue": "telegram",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2032,
+        -304
+      ],
+      "id": "b312c783-eff1-4e18-8d33-dc4ad8110acb",
+      "name": "Route: Hot? (Telegram)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "96050c23-33d7-42d2-b67b-0e030f4736eb",
+              "leftValue": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.DeliveryChannel }}",
+              "rightValue": "telegram",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2096,
+        0
+      ],
+      "id": "e079f851-9624-4c01-8621-81d09b5b3fe6",
+      "name": "Route: Warm? (Telegram)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "96050c23-33d7-42d2-b67b-0e030f4736eb",
+              "leftValue": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.DeliveryChannel }}",
+              "rightValue": "telegram",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2064,
+        368
+      ],
+      "id": "1bcbfda1-7b81-4d96-90aa-89bf533fc1cd",
+      "name": "Route: Cold? (Telegram)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a lead qualification AI.\n\nClassify the following lead into exactly ONE of these categories:\n\nHot\nWarm\nCold\n\nRules:\n- Hot = ready to buy, wants pricing, demo, meeting, or urgent help.\n- Warm = interested but not ready yet.\n- Cold = just saying hello, asking generic questions, or no buying intent.\n\nReturn ONLY one word:\nHot\nWarm\nCold\n\nLead message:\n{{ $json.Message }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "2ee60e8f-5ede-4a82-bbc8-f7576b52ede1",
+      "name": "AI — Classify Lead (Hot/Warm/Cold)",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1gPLcjASt50xKeSv-YqzQRiTlOTpwffiws95Rw5THAgA",
+          "mode": "list",
+          "cachedResultName": "Scenario-10-Full-Client-System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gPLcjASt50xKeSv-YqzQRiTlOTpwffiws95Rw5THAgA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "List 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gPLcjASt50xKeSv-YqzQRiTlOTpwffiws95Rw5THAgA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ContactID": "={{ $json.ContactID }}",
+            "LeadID": "={{ $json.LeadID }}",
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Message": "={{ $json.Message }}",
+            "Date": "={{ $json.Date }}",
+            "Replied": "={{ $json.Replied }}",
+            "ReminderSent": "={{ $json.ReminderSent }}",
+            "LeadScore": "={{ $json.LeadScore }}",
+            "DeliveryChannel": "={{ $json.DeliveryChannel }}",
+            "Contact": "={{ $json.Contact }}"
+          },
+          "matchingColumns": [
+            "ContactID"
+          ],
+          "schema": [
+            {
+              "id": "LeadID",
+              "displayName": "LeadID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Replied",
+              "displayName": "Replied",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ReminderSent",
+              "displayName": "ReminderSent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LeadScore",
+              "displayName": "LeadScore",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ContactID",
+              "displayName": "ContactID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "DeliveryChannel",
+              "displayName": "DeliveryChannel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        944,
+        0
+      ],
+      "id": "5ccb5626-046f-4601-9417-26a6ef6f87ff",
+      "name": "CRM — Upsert Lead (Dedup by ContactID)",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HOfirSsYOrJRcRUf",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "f95a2bb4-c9a3-45e4-84df-84fab70fcfec",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        464,
+        -96
+      ],
+      "id": "3dd7a816-fa98-4a68-8f6c-46607d3d35a2",
+      "name": "Trigger — Webhook Lead",
+      "webhookId": "f95a2bb4-c9a3-45e4-84df-84fab70fcfec"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        112
+      ],
+      "id": "2b1c7b9e-f16b-423c-9fd9-3cfe89634159",
+      "name": "Trigger — Telegram Lead",
+      "webhookId": "4ac209a0-d35e-409f-877b-325f803ee361",
+      "credentials": {
+        "telegramApi": {
+          "id": "itmcseOmJxMd1gBS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fce70105-7f1e-4192-8dd3-e5335058c878",
+              "name": "LeadID",
+              "value": "={{ Date.now().toString() }}",
+              "type": "string"
+            },
+            {
+              "id": "d39ea3b9-460f-424e-b47b-737afabe2ac0",
+              "name": "Name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "3f68f492-269c-42a1-9689-2018e9df8ece",
+              "name": "Email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "aa0b00a0-e671-41a2-9614-1b2735d6e14d",
+              "name": "Message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "cf385b78-1103-4683-ad34-173de74113f4",
+              "name": "ContactID",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "aae10ca3-0f87-4794-9112-4c9fd0e12bc7",
+              "name": "DeliveryChannel",
+              "value": "email",
+              "type": "string"
+            },
+            {
+              "id": "801221f6-be7e-41ee-b736-a8b3a803d0ef",
+              "name": "Contact",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "040290a3-6a4b-41b9-a4c8-ef23bcd3a4f2",
+              "name": "Date",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "dabd518e-d501-43f4-b615-e56abef268d6",
+              "name": "Replied",
+              "value": "FALSE",
+              "type": "string"
+            },
+            {
+              "id": "0d36fa85-93b5-48d8-a5f1-c201555d4bcc",
+              "name": "ReminderSent",
+              "value": "FALSE",
+              "type": "string"
+            },
+            {
+              "id": "48980293-2fe3-48bd-8463-ceea5b316090",
+              "name": "LeadScore",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "9446f858-92a4-413a-ad76-74f823af5911",
+      "name": "Normalize — Webhook Input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fce70105-7f1e-4192-8dd3-e5335058c878",
+              "name": "LeadID",
+              "value": "={{ Date.now().toString() }}",
+              "type": "string"
+            },
+            {
+              "id": "d39ea3b9-460f-424e-b47b-737afabe2ac0",
+              "name": "Name",
+              "value": "={{ $json.message.from.first_name }}",
+              "type": "string"
+            },
+            {
+              "id": "3f68f492-269c-42a1-9689-2018e9df8ece",
+              "name": "Email",
+              "value": "=\"\"",
+              "type": "string"
+            },
+            {
+              "id": "aa0b00a0-e671-41a2-9614-1b2735d6e14d",
+              "name": "Message",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "cf385b78-1103-4683-ad34-173de74113f4",
+              "name": "ContactID",
+              "value": "={{ \"telegram_\" + $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "aae10ca3-0f87-4794-9112-4c9fd0e12bc7",
+              "name": "DeliveryChannel",
+              "value": "telegram",
+              "type": "string"
+            },
+            {
+              "id": "801221f6-be7e-41ee-b736-a8b3a803d0ef",
+              "name": "Contact",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "040290a3-6a4b-41b9-a4c8-ef23bcd3a4f2",
+              "name": "Date",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "dabd518e-d501-43f4-b615-e56abef268d6",
+              "name": "Replied",
+              "value": "FALSE",
+              "type": "string"
+            },
+            {
+              "id": "0d36fa85-93b5-48d8-a5f1-c201555d4bcc",
+              "name": "ReminderSent",
+              "value": "FALSE",
+              "type": "string"
+            },
+            {
+              "id": "48980293-2fe3-48bd-8463-ceea5b316090",
+              "name": "LeadScore",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        112
+      ],
+      "id": "1a0d7edc-853a-4475-8444-6035923fd4ce",
+      "name": "Normalize — Telegram Input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a7399303-d4bf-4ecb-816f-579034003e9b",
+              "name": "ContactID",
+              "value": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.ContactID }}",
+              "type": "string"
+            },
+            {
+              "id": "c7f19973-3c3c-4737-a027-c6c87e7efcf1",
+              "name": "LeadScore",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1424,
+        0
+      ],
+      "id": "4e65d8fd-7b55-4175-9ac4-1f30e73730f8",
+      "name": "Format — LeadScore"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1gPLcjASt50xKeSv-YqzQRiTlOTpwffiws95Rw5THAgA",
+          "mode": "list",
+          "cachedResultName": "Scenario-10-Full-Client-System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gPLcjASt50xKeSv-YqzQRiTlOTpwffiws95Rw5THAgA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "List 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gPLcjASt50xKeSv-YqzQRiTlOTpwffiws95Rw5THAgA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "ContactID"
+          ],
+          "schema": [
+            {
+              "id": "LeadID",
+              "displayName": "LeadID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Replied",
+              "displayName": "Replied",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ReminderSent",
+              "displayName": "ReminderSent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LeadScore",
+              "displayName": "LeadScore",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ContactID",
+              "displayName": "ContactID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "DeliveryChannel",
+              "displayName": "DeliveryChannel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1600,
+        0
+      ],
+      "id": "b306cb70-6483-45d3-8dc8-e4d4179be454",
+      "name": "CRM — Update LeadScore",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HOfirSsYOrJRcRUf",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Lead Intake\n\nReceives new leads from:\n• Website Webhook\n• Telegram Bot\n\nBoth inputs are normalized into one shared schema.",
+        "height": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "fe9f2fff-13e3-4a92-9874-d9f6fdb37c48",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "CRM Layer\n\nStores every lead in Google Sheets.\n\nExisting contacts are updated using ContactID,\nnew contacts are automatically created.",
+        "height": 224,
+        "color": "#30691C"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        192
+      ],
+      "id": "819ab6f0-3c2c-42a3-896d-51cbd742889c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "AI Qualification\n\nOpenAI classifies each lead as:\n\n• Hot\n• Warm\n• Cold\n\nbased on the lead message.",
+        "height": 240,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -272
+      ],
+      "id": "22587c33-e628-40ea-94b9-61f63efc6ccf",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Routing Logic\n\nRoutes responses by:\n\n• Source Channel\n• LeadScore",
+        "color": "#804E14"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        192
+      ],
+      "id": "f1adb9ec-b787-48a7-b2e8-da4731fe2c5a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Contact }}",
+        "text": "=Hi {{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Name }}! 👋  Thanks for reaching out.  Based on your message, I think a quick call would be the best next step.  You can book a meeting here:  https://calendly.com/buildwithmatyas/free-ai-automation-consultation  Looking forward to speaking with you!",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2368,
+        -448
+      ],
+      "id": "83380d2d-5b74-4aff-921d-6ef13a36681f",
+      "name": "Telegram — Hot Lead Response",
+      "webhookId": "dee09109-0acd-4d16-84c7-6bee763469d6",
+      "credentials": {
+        "telegramApi": {
+          "id": "itmcseOmJxMd1gBS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Email }}",
+        "subject": "Thanks for your interest!",
+        "emailType": "text",
+        "message": "=Hi {{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Name }},  Thank you for reaching out!  Based on your message, it looks like you'd benefit from a quick call.  You can book a meeting here: https://calendly.com/buildwithmatyas/free-ai-automation-consultation  Looking forward to speaking with you!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2368,
+        -256
+      ],
+      "id": "1e6426da-2f29-4613-8930-a5dea0393e16",
+      "name": "Gmail — Hot Lead Response + Calendly",
+      "webhookId": "9d3bf13f-b668-4ef2-bac5-11bd871c2bd9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "l2LjW4waakI4hrO7",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Contact }}",
+        "text": "Hi!  Thanks for your interest.  I'll review your message and get back to you soon.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2384,
+        -64
+      ],
+      "id": "923c07d4-28fd-40d0-b946-54e3950d850b",
+      "name": "Telegram — Warm Lead Response",
+      "webhookId": "4d8c920b-79de-4651-96b3-37a5a5319442",
+      "credentials": {
+        "telegramApi": {
+          "id": "itmcseOmJxMd1gBS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Email }}",
+        "subject": "Thanks for contacting us!",
+        "emailType": "text",
+        "message": "=Hi {{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Name }},  Thank you for your message.  We'll get back to you shortly with more information.  Have a great day!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2384,
+        128
+      ],
+      "id": "c4d6f7ea-0fb7-46e1-b602-749d2bcb18c5",
+      "name": "Gmail — Warm Lead Response",
+      "webhookId": "9d3bf13f-b668-4ef2-bac5-11bd871c2bd9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "l2LjW4waakI4hrO7",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Contact }}",
+        "text": "Hi!  Thanks for contacting us.  We've received your message.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2384,
+        320
+      ],
+      "id": "3ae3d511-8646-4854-a18a-a198836429af",
+      "name": "Telegram — Cold Lead Response",
+      "webhookId": "4d8c920b-79de-4651-96b3-37a5a5319442",
+      "credentials": {
+        "telegramApi": {
+          "id": "itmcseOmJxMd1gBS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Email }}",
+        "subject": "Thanks for reaching out!",
+        "emailType": "text",
+        "message": "=Hi {{ $('CRM — Upsert Lead (Dedup by ContactID)').item.json.Name }},  Thanks for your message.  We really appreciate you contacting us.  Have a great day!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2384,
+        512
+      ],
+      "id": "c0b8dc36-f074-4ea7-adb6-3db4a7c429a5",
+      "name": "Gmail — Cold Lead Response",
+      "webhookId": "9d3bf13f-b668-4ef2-bac5-11bd871c2bd9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "l2LjW4waakI4hrO7",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Sends responses through\nthe same channel the lead\nused to contact us.\n\n• Telegram → Telegram reply\n• Webhook → Gmail email\n\nHot leads also receive\na Calendly booking link.",
+        "height": 256,
+        "color": "#807714"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2592,
+        -32
+      ],
+      "id": "be2585e6-5df5-4641-8304-69c0f19d1e19",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Route by Channel": {
+      "main": [
+        [
+          {
+            "node": "Route: Hot? (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route: Warm? (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route: Cold? (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Hot? (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Telegram — Hot Lead Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail — Hot Lead Response + Calendly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Warm? (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Telegram — Warm Lead Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail — Warm Lead Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Cold? (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Telegram — Cold Lead Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail — Cold Lead Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI — Classify Lead (Hot/Warm/Cold)": {
+      "main": [
+        [
+          {
+            "node": "Format — LeadScore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM — Upsert Lead (Dedup by ContactID)": {
+      "main": [
+        [
+          {
+            "node": "AI — Classify Lead (Hot/Warm/Cold)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger — Webhook Lead": {
+      "main": [
+        [
+          {
+            "node": "Normalize — Webhook Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger — Telegram Lead": {
+      "main": [
+        [
+          {
+            "node": "Normalize — Telegram Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize — Webhook Input": {
+      "main": [
+        [
+          {
+            "node": "CRM — Upsert Lead (Dedup by ContactID)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize — Telegram Input": {
+      "main": [
+        [
+          {
+            "node": "CRM — Upsert Lead (Dedup by ContactID)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format — LeadScore": {
+      "main": [
+        [
+          {
+            "node": "CRM — Update LeadScore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM — Update LeadScore": {
+      "main": [
+        [
+          {
+            "node": "Route by Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8aa5b9bc-bf92-48e3-bf9e-c8553b06e2a4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4488c150ca64be36244611bd1151f5a0ffe1051e0dd79f89ac48aadb5424e099"
+  },
+  "nodeGroups": [],
+  "id": "t0SBix9YCjpYZKyQ",
+  "tags": []
+}
