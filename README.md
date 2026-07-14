@@ -121,7 +121,7 @@ The workflow was tested end-to-end using multiple real-world scenarios.
 
 ### Google Sheets CRM
 
-![Google Sheets](screenshots/Google-sheet.png)
+![Google Sheets](screenshots/Google-Sheet.png)
 
 ### Gmail Response
 
